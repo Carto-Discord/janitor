@@ -2,47 +2,29 @@ import { EventFunction } from "@google-cloud/functions-framework/build/src/funct
 import { Client } from "discord.js";
 import { Firestore } from "@google-cloud/firestore";
 import { Storage } from "@google-cloud/storage";
-
-const firestore = new Firestore();
-
-const getChannelsInFirestore = async () => {
-  const channelsCollection = firestore.collection("channels");
-
-  const docRefs = await channelsCollection.listDocuments();
-  return docRefs.map((doc) => doc.id);
-};
-
-const deleteDataInFirestoreAndStorage = async (channelId: string) => {
-  const storage = new Storage();
-
-  const channelDoc = firestore.collection("channels").doc(channelId);
-
-  const { base, current, history } = (await channelDoc.get()).data();
-  const mapIds = [base, current, ...history];
-
-  const mapsCollection = firestore.collection("maps");
-  const mapsBucket = storage.bucket(process.env.MAPS_BUCKET);
-
-  await Promise.all(
-    mapIds.map((id) => {
-      mapsCollection.doc(id).delete();
-      mapsBucket.file(id).delete();
-    })
-  );
-
-  await channelDoc.delete();
-};
+import { getChannelsInFirestore } from "./firestore";
+import { deleteChannelData, deleteOrphanedMaps } from "./cleanup";
 
 export const trigger: EventFunction = async (_data, _context) => {
   const client = new Client();
+  const firestore = new Firestore();
+  const storage = new Storage();
+
   client.login(process.env.DISCORD_TOKEN);
 
-  const channelsToFind = await getChannelsInFirestore();
-  channelsToFind.forEach(async (channelId) => {
-    const channel = await client.channels.fetch(channelId);
+  const channelsToFind = await getChannelsInFirestore(firestore);
 
-    if (channel.deleted) {
-      await deleteDataInFirestoreAndStorage(channelId);
-    }
-  });
+  await Promise.all(
+    channelsToFind.map((channelId) => {
+      const channelExists = client.channels.cache.find(
+        (channel) => channel.id === channelId
+      );
+
+      if (!channelExists) {
+        return deleteChannelData(firestore, storage, channelId);
+      }
+    })
+  );
+
+  await deleteOrphanedMaps(firestore, storage);
 };

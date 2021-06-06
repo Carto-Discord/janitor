@@ -6,7 +6,8 @@
         "rootDir": ".",
         "sourceMap": true,
         "strict": false,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "downlevelIteration": true
     },
     "exclude": [
         "**/*.test.ts"
