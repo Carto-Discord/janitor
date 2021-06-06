@@ -1,4 +1,3 @@
-import type { Firestore } from "@google-cloud/firestore";
 import { mockGoogleCloudFirestore } from "firestore-jest-mock/mocks/googleCloudFirestore";
 import {
   mockDelete,

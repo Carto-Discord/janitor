@@ -1,34 +1,34 @@
+import { mockGoogleCloudFirestore } from "firestore-jest-mock/mocks/googleCloudFirestore";
 import { getChannelsInFirestore, getMapsInFirestore } from "./firestore";
 
 describe("Get documents in Firestore", () => {
-  const mockListChannels = jest
-    .fn()
-    .mockResolvedValue([{ id: "123" }, { id: "456" }]);
-
-  const mockListMaps = jest
-    .fn()
-    .mockResolvedValue([{ id: "321" }, { id: "654" }]);
-
-  const mockFirestore = {
-    collection: (name: string) => {
-      if (name === "channels") {
-        return {
-          listDocuments: mockListChannels,
-        };
-      } else {
-        return {
-          listDocuments: mockListMaps,
-        };
-      }
+  mockGoogleCloudFirestore({
+    database: {
+      channels: [
+        {
+          id: "123",
+          base: "123-456-789",
+          current: "321-654-987",
+          history: [],
+        },
+        {
+          id: "456",
+          base: "234-567-890",
+          current: "432-765-098",
+          history: [],
+        },
+      ],
+      maps: [{ id: "321" }, { id: "654" }],
     },
-  };
+  });
 
-  beforeEach(() => {});
+  const { Firestore } = require("@google-cloud/firestore");
+  const firestore = new Firestore();
 
   describe("channels", () => {
     it("should return a list of document IDs", async () => {
       //@ts-ignore
-      const result = await getChannelsInFirestore(mockFirestore);
+      const result = await getChannelsInFirestore(firestore);
 
       expect(result).toEqual(["123", "456"]);
     });
@@ -37,7 +37,7 @@ describe("Get documents in Firestore", () => {
   describe("maps", () => {
     it("should return a list of document IDs", async () => {
       //@ts-ignore
-      const result = await getMapsInFirestore(mockFirestore);
+      const result = await getMapsInFirestore(firestore);
 
       expect(result).toEqual(["321", "654"]);
     });

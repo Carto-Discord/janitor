@@ -2,10 +2,12 @@ import type { Firestore } from "@google-cloud/firestore";
 import { Collections } from "./types";
 
 const getDocsInFirestore = async (firestore: Firestore, collection: string) => {
-  const channelsCollection = firestore.collection(collection);
+  const channelsCollection = await firestore.collection(collection).get();
 
-  const docRefs = await channelsCollection.listDocuments();
-  return docRefs.map((doc) => doc.id);
+  let docIds: string[] = [];
+  channelsCollection.forEach((doc) => docIds.push(doc.id));
+
+  return docIds;
 };
 
 export const getChannelsInFirestore = async (firestore: Firestore) =>
