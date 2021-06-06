@@ -54,17 +54,17 @@ export const deleteOrphanedMaps = async (
   const channelsCollection = firestore.collection(Collections.CHANNELS);
   const mapsBucket = storage.bucket(process.env.MAPS_BUCKET);
 
-  const mapIdsToDelete = await Promise.all(
-    maps
-      .map(
+  const mapIdsToDelete = (
+    await Promise.all(
+      maps.map(
         async (m) =>
           await mapsBucket
             .file(`${m}.png`)
             .exists()
             .then((exists) => (exists ? undefined : m))
       )
-      .filter((v) => v)
-  );
+    )
+  ).filter((v) => v);
 
   await Promise.all([
     ...mapIdsToDelete.map((m) => mapsCollection.doc(m).delete()),
@@ -77,7 +77,7 @@ export const deleteOrphanedMaps = async (
       if (mapIdsToDelete.includes(base) || mapIdsToDelete.includes(current)) {
         // Delete the whole channel document anyway, as this data
         // is now unrecoverable.
-        return channelsCollection.doc(id).delete();
+        return deleteChannelData(firestore, storage, id);
       } else if (mapIdsToDelete.some((id) => history.includes(id))) {
         // Only history is affected, so we can remove all the IDs safely.
         const newHistory = history.filter((id) => !mapIdsToDelete.includes(id));
