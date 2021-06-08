@@ -24,7 +24,7 @@ export const deleteChannelData = async (
   const mapIds = [...new Set([base, current, ...history])];
 
   const mapsCollection = firestore.collection(Collections.MAPS);
-  const mapsBucket = storage.bucket(process.env.MAPS_BUCKET);
+  const mapsBucket = storage.bucket(process.env.MAP_BUCKET);
 
   await Promise.all(
     mapIds.map((id) => {
