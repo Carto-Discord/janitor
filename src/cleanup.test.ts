@@ -38,7 +38,7 @@ mockGoogleCloudFirestore({
   },
 });
 
-describe("Delete Channel Data", () => {
+describe.skip("Delete Channel Data", () => {
   const { Firestore } = require("@google-cloud/firestore");
   const firestore = new Firestore();
 
@@ -78,7 +78,7 @@ describe("Delete Channel Data", () => {
   });
 });
 
-describe("Delete Orphaned Maps", () => {
+describe.skip("Delete Orphaned Maps", () => {
   const { Firestore } = require("@google-cloud/firestore");
   const firestore = new Firestore();
 

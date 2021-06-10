@@ -28,8 +28,13 @@ export const deleteChannelData = async (
 
   await Promise.all(
     mapIds.map((id) => {
-      mapsCollection.doc(id).delete();
-      mapsBucket.file(`${id}.png`).delete();
+      try {
+        console.log(`Deleting collection and image for ${id}`);
+        // mapsCollection.doc(id).delete();
+        // mapsBucket.file(`${id}.png`).delete();
+      } catch (e) {
+        console.warn(`Error deleting map files: ${e}`);
+      }
     })
   );
 
@@ -67,7 +72,10 @@ export const deleteOrphanedMaps = async (
   ).filter((v) => v);
 
   await Promise.all([
-    ...mapIdsToDelete.map((m) => mapsCollection.doc(m).delete()),
+    ...mapIdsToDelete.map((m) => {
+      console.log(`Deleting orphaned map ${m}`);
+      // mapsCollection.doc(m).delete();
+    }),
     ...channels.map(async (id) => {
       const channelDoc = channelsCollection.doc(id);
       const { base, current, history } = (
@@ -77,11 +85,15 @@ export const deleteOrphanedMaps = async (
       if (mapIdsToDelete.includes(base) || mapIdsToDelete.includes(current)) {
         // Delete the whole channel document anyway, as this data
         // is now unrecoverable.
+        console.log(
+          `Deleting data for ${id} - base or current image being deleted`
+        );
         return deleteChannelData(firestore, storage, id);
       } else if (mapIdsToDelete.some((id) => history.includes(id))) {
         // Only history is affected, so we can remove all the IDs safely.
         const newHistory = history.filter((id) => !mapIdsToDelete.includes(id));
-        return channelsCollection.doc(id).update({ history: newHistory });
+        console.log(`Updating channel ${id} history: ${newHistory}`);
+        // return channelsCollection.doc(id).update({ history: newHistory });
       }
     }),
   ]);

@@ -21,10 +21,12 @@ export const trigger: EventFunction = async (_data, _context) => {
       );
 
       if (!channelExists) {
+        console.log(`Deleting data for ${channelId} - determined not to exist`);
         return deleteChannelData(firestore, storage, channelId);
       }
     })
   );
 
+  console.log("Deleting orphaned maps");
   await deleteOrphanedMaps(firestore, storage);
 };
