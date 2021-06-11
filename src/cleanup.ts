@@ -57,7 +57,7 @@ export const deleteOrphanedMaps = async (
 
   const mapsCollection = firestore.collection(Collections.MAPS);
   const channelsCollection = firestore.collection(Collections.CHANNELS);
-  const mapsBucket = storage.bucket(process.env.MAPS_BUCKET);
+  const mapsBucket = storage.bucket(process.env.MAP_BUCKET);
 
   const mapIdsToDelete = (
     await Promise.all(
