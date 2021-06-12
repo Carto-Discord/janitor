@@ -38,7 +38,8 @@ export const deleteChannelData = async (
     })
   );
 
-  await channelDoc.delete();
+  console.log(`Deleting document ${channelDoc.id}`);
+  // await channelDoc.delete();
 };
 
 /**
