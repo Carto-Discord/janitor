@@ -1,5 +1,5 @@
 import { EventFunction } from "@google-cloud/functions-framework/build/src/functions";
-import { Client } from "discord.js";
+import { Client, DiscordAPIError } from "discord.js";
 import { Firestore } from "@google-cloud/firestore";
 import { Storage } from "@google-cloud/storage";
 import { getChannelsInFirestore } from "./firestore";
@@ -15,12 +15,10 @@ export const trigger: EventFunction = async (_data, _context) => {
   const channelsToFind = await getChannelsInFirestore(firestore);
 
   await Promise.all(
-    channelsToFind.map((channelId) => {
-      const channelExists = client.channels.cache.find(
-        (channel) => channel.id === channelId
-      );
-
-      if (!channelExists) {
+    channelsToFind.map(async (channelId) => {
+      try {
+        await client.channels.fetch(channelId);
+      } catch (e) {
         console.log(`Deleting data for ${channelId} - determined not to exist`);
         return deleteChannelData(firestore, storage, channelId);
       }

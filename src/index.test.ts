@@ -25,6 +25,7 @@ const mockDeleteOrphanedMaps = deleteOrphanedMaps as jest.MockedFunction<
 
 describe("Function Trigger", () => {
   const mockLogin = jest.fn();
+  const mockFetch = jest.fn();
 
   mockFirestore.mockImplementation(() => ({} as unknown as Firestore));
   mockStorage.mockImplementation(() => ({} as unknown as Storage));
@@ -32,27 +33,18 @@ describe("Function Trigger", () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
+    mockClient.mockImplementation(() => ({
+      login: mockLogin,
+      //@ts-ignore
+      channels: { fetch: mockFetch },
+    }));
+
     process.env.DISCORD_TOKEN = "token";
   });
 
   describe("given all channels exist", () => {
     beforeEach(() => {
-      const mockChannels = [
-        {
-          id: "1234",
-        },
-        {
-          id: "5678",
-        },
-        {
-          id: "9876",
-        },
-      ];
-      mockClient.mockImplementation(() => ({
-        login: mockLogin,
-        //@ts-ignore
-        channels: { cache: mockChannels },
-      }));
+      mockFetch.mockResolvedValue({ id: "1234" });
       mockGetChannelsInFirestore.mockResolvedValue(["1234", "5678"]);
     });
 
@@ -68,19 +60,9 @@ describe("Function Trigger", () => {
 
   describe("given only some channels exist", () => {
     beforeEach(() => {
-      const mockChannels = [
-        {
-          id: "1234",
-        },
-        {
-          id: "9876",
-        },
-      ];
-      mockClient.mockImplementation(() => ({
-        login: mockLogin,
-        //@ts-ignore
-        channels: { cache: mockChannels },
-      }));
+      mockFetch
+        .mockResolvedValueOnce({ id: "1234" })
+        .mockRejectedValueOnce({ id: "5678" });
       mockGetChannelsInFirestore.mockResolvedValue(["1234", "5678"]);
     });
 
@@ -97,16 +79,9 @@ describe("Function Trigger", () => {
 
   describe("given none of the stored channels exist", () => {
     beforeEach(() => {
-      const mockChannels = [
-        {
-          id: "9876",
-        },
-      ];
-      mockClient.mockImplementation(() => ({
-        login: mockLogin,
-        //@ts-ignore
-        channels: { cache: mockChannels },
-      }));
+      mockFetch
+        .mockRejectedValueOnce({ id: "1234" })
+        .mockRejectedValueOnce({ id: "5678" });
       mockGetChannelsInFirestore.mockResolvedValue(["1234", "5678"]);
     });
 
