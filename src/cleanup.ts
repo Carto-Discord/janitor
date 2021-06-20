@@ -30,8 +30,8 @@ export const deleteChannelData = async (
     mapIds.map((id) => {
       try {
         console.log(`Deleting collection and image for ${id}`);
-        // mapsCollection.doc(id).delete();
-        // mapsBucket.file(`${id}.png`).delete();
+        mapsCollection.doc(id).delete();
+        mapsBucket.file(`${id}.png`).delete();
       } catch (e) {
         console.warn(`Error deleting map files: ${e}`);
       }
@@ -39,7 +39,7 @@ export const deleteChannelData = async (
   );
 
   console.log(`Deleting document ${channelDoc.id}`);
-  // await channelDoc.delete();
+  await channelDoc.delete();
 };
 
 /**
@@ -75,7 +75,7 @@ export const deleteOrphanedMaps = async (
   await Promise.all([
     ...mapIdsToDelete.map((m) => {
       console.log(`Deleting orphaned map ${m}`);
-      // mapsCollection.doc(m).delete();
+      mapsCollection.doc(m).delete();
     }),
     ...channels.map(async (id) => {
       const channelDoc = channelsCollection.doc(id);
@@ -94,7 +94,7 @@ export const deleteOrphanedMaps = async (
         // Only history is affected, so we can remove all the IDs safely.
         const newHistory = history.filter((id) => !mapIdsToDelete.includes(id));
         console.log(`Updating channel ${id} history: ${newHistory}`);
-        // return channelsCollection.doc(id).update({ history: newHistory });
+        return channelsCollection.doc(id).update({ history: newHistory });
       }
     }),
   ]);

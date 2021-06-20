@@ -1,4 +1,4 @@
-import { Client, Channel } from "discord.js";
+import { Client } from "discord.js";
 import { Firestore } from "@google-cloud/firestore";
 import { Storage } from "@google-cloud/storage";
 import { getChannelsInFirestore } from "./firestore";
@@ -22,6 +22,8 @@ const mockDeleteChannelData = deleteChannelData as jest.MockedFunction<
 const mockDeleteOrphanedMaps = deleteOrphanedMaps as jest.MockedFunction<
   typeof deleteOrphanedMaps
 >;
+
+jest.spyOn(console, "log").mockImplementation(jest.fn());
 
 describe("Function Trigger", () => {
   const mockLogin = jest.fn();

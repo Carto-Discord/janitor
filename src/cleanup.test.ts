@@ -6,6 +6,8 @@ import {
 } from "firestore-jest-mock/mocks/firestore";
 import { deleteChannelData, deleteOrphanedMaps } from "./cleanup";
 
+jest.spyOn(console, "log").mockImplementation(jest.fn());
+
 mockGoogleCloudFirestore({
   database: {
     channels: [
@@ -38,7 +40,7 @@ mockGoogleCloudFirestore({
   },
 });
 
-describe.skip("Delete Channel Data", () => {
+describe("Delete Channel Data", () => {
   const { Firestore } = require("@google-cloud/firestore");
   const firestore = new Firestore();
 
@@ -78,7 +80,7 @@ describe.skip("Delete Channel Data", () => {
   });
 });
 
-describe.skip("Delete Orphaned Maps", () => {
+describe("Delete Orphaned Maps", () => {
   const { Firestore } = require("@google-cloud/firestore");
   const firestore = new Firestore();
 
