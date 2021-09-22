@@ -18,7 +18,7 @@
   "license": "ISC",
   "devDependencies": {
     "@google-cloud/functions-framework": "1.7.1",
-    "@types/jest": "26.0.24",
+    "@types/jest": "27.0.2",
     "@types/node": "15.6.1",
     "concurrently": "6.2.0",
     "copyfiles": "2.4.1",
