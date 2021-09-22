@@ -1,6 +1,6 @@
 resource "google_cloudfunctions_function" "carto_janitor" {
   name    = "${var.app_name}-janitor"
-  runtime = "nodejs14"
+  runtime = "nodejs16"
 
   available_memory_mb   = 128
   source_archive_bucket = "${var.app_name}-code"
