@@ -1,12 +1,12 @@
 import { EventFunction } from "@google-cloud/functions-framework/build/src/functions";
-import { Client, DiscordAPIError } from "discord.js";
+import { Client, Intents } from "discord.js";
 import { Firestore } from "@google-cloud/firestore";
 import { Storage } from "@google-cloud/storage";
 import { getChannelsInFirestore } from "./firestore";
 import { deleteChannelData, deleteOrphanedMaps } from "./cleanup";
 
 export const trigger: EventFunction = async (_data, _context) => {
-  const client = new Client();
+  const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
   const firestore = new Firestore();
   const storage = new Storage();
 
