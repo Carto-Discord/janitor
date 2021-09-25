@@ -5,6 +5,21 @@ import { Storage } from "@google-cloud/storage";
 import { getChannelsInFirestore } from "./firestore";
 import { deleteChannelData, deleteOrphanedMaps } from "./cleanup";
 
+export const test: EventFunction = async (_data, _context) => {
+  const firestore = new Firestore();
+  const storage = new Storage();
+
+  await firestore
+    .collection("channels")
+    .doc("new-doc")
+    .create({ hello: "world" });
+
+  console.log(await getChannelsInFirestore(firestore));
+
+  const mapsBucket = storage.bucket("carto-bot-map-uploads");
+  console.log(await mapsBucket.file("test.png").getMetadata());
+};
+
 export const trigger: EventFunction = async (_data, _context) => {
   const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
   const firestore = new Firestore();

@@ -8,6 +8,8 @@
     "postbuild": "copyfiles .env build/",
     "build": "tsc",
     "build:package": "copyfiles build/**/* package.json package-lock.json package",
+    "dev": "cross-env FIRESTORE_EMULATOR_HOST=localhost:8080 STORAGE_EMULATOR_HOST=http://localhost:9199 functions-framework --source=build/src/ --target=test --signature-type=event --port 3000",
+    "emulators": "firebase emulators:start --project janitor --import=./firebase-data --export-on-exit",
     "start": "functions-framework --source=build/src/ --target=trigger --signature-type=event",
     "test": "jest --watch",
     "test:ci": "jest",
@@ -16,22 +18,24 @@
   },
   "author": "Miles Bardon",
   "license": "ISC",
+  "dependencies": {
+    "@google-cloud/firestore": "4.15.1",
+    "@google-cloud/storage": "5.14.3",
+    "discord.js": "13.1.0"
+  },
   "devDependencies": {
     "@google-cloud/functions-framework": "1.9.0",
     "@types/jest": "27.0.2",
     "@types/node": "15.6.1",
     "concurrently": "6.2.1",
     "copyfiles": "2.4.1",
+    "cross-env": "7.0.3",
+    "firebase-tools": "9.18.0",
     "firestore-jest-mock": "0.17.0",
     "jest": "27.2.1",
     "nodemon": "2.0.12",
     "rimraf": "3.0.2",
     "ts-jest": "27.0.5",
     "typescript": "4.4.3"
-  },
-  "dependencies": {
-    "@google-cloud/firestore": "^4.12.2",
-    "@google-cloud/storage": "^5.8.5",
-    "discord.js": "^13.0.0"
   }
 }

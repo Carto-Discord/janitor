@@ -1,0 +1,19 @@
+{
+  "name": "6205a354-4764-4427-a8ca-05de97c05519.png",
+  "bucket": "carto-bot-map-uploads",
+  "contentType": "image/png",
+  "metageneration": 1,
+  "generation": 1632561696933,
+  "storageClass": "STANDARD",
+  "etag": "someETag",
+  "contentDisposition": "inline",
+  "contentEncoding": "identity",
+  "downloadTokens": [
+    "ddff86be-46a9-4307-a5ac-6a06cf195700"
+  ],
+  "timeCreated": "2021-09-25T09:21:36.932Z",
+  "updated": "2021-09-25T09:21:36.934Z",
+  "size": 348177,
+  "md5Hash": "f8XMGRo29nKMyiDVrxOIww==",
+  "crc32c": "2346299281"
+}
