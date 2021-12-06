@@ -30,7 +30,7 @@
     "typescript": "4.4.4"
   },
   "dependencies": {
-    "@google-cloud/firestore": "^4.12.2",
+    "@google-cloud/firestore": "^5.0.0",
     "@google-cloud/storage": "^5.8.5",
     "discord.js": "^13.0.0"
   }
