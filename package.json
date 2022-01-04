@@ -19,7 +19,7 @@
   "devDependencies": {
     "@google-cloud/functions-framework": "2.0.0",
     "@types/jest": "27.0.2",
-    "@types/node": "16.11.7",
+    "@types/node": "16.11.19",
     "concurrently": "6.3.0",
     "copyfiles": "2.4.1",
     "firestore-jest-mock": "0.17.0",
